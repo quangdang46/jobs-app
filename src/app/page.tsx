@@ -11,7 +11,10 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
+import { SidebarUserButton } from "@/features/users/components/SidebarUserButton";
+import { SignedIn, SignedOut } from "@/services/clerk/components/AuthButton";
+import { LogInIcon } from "lucide-react";
+import Link from "next/link";
 export default function Home() {
   return (
     <SidebarProvider className="overflow-y-hidden">
@@ -21,19 +24,33 @@ export default function Home() {
             <SidebarTrigger></SidebarTrigger>
             <span className="text-xl text-nowrap">Jobs</span>
           </SidebarHeader>
-          {/* >
-        <SidebarFooter>ddsdsf</SidebarFooter> */}
+
           <SidebarContent>
-            <SidebarGroup>sssss</SidebarGroup>
-            <SidebarGroup>sssss</SidebarGroup>
+            <SidebarGroup>
+              <SidebarMenu>
+                <SignedOut>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <Link href={"/sign-in"}>
+                        <LogInIcon></LogInIcon>
+                        <span>Log in</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SignedOut>
+              </SidebarMenu>
+            </SidebarGroup>
           </SidebarContent>
-          <SidebarFooter>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton>sadasds</SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarFooter>
+
+          <SignedIn>
+            <SidebarFooter>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarUserButton></SidebarUserButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarFooter>
+          </SignedIn>
         </Sidebar>
 
         <main className="flex-1">ádadd</main>
