@@ -1,15 +1,15 @@
 import { OrganizationList } from "@clerk/nextjs";
 
 type Props = {
-  searchParams: { redirect?: string };
+  searchParams: Promise<{ redirect?: string }>;
 };
 
 export default function Page(props: Props) {
   return <SuspendedPage {...props}></SuspendedPage>;
 }
 
-function SuspendedPage({ searchParams }: Props) {
-  const { redirect } = searchParams;
+async function SuspendedPage({ searchParams }: Props) {
+  const { redirect } = await searchParams;
   const redirectUrl = redirect ?? "/employer";
 
   return (
