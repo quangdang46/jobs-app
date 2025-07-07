@@ -1,16 +1,11 @@
 import { OrganizationList } from "@clerk/nextjs";
-import { Suspense } from "react";
 
 type Props = {
   searchParams: { redirect?: string };
 };
 
-export default async function page(props: Props) {
-  return (
-    <Suspense>
-      <SuspendedPage {...props}></SuspendedPage>
-    </Suspense>
-  );
+export default function Page(props: Props) {
+  return <SuspendedPage {...props}></SuspendedPage>;
 }
 
 function SuspendedPage({ searchParams }: Props) {
