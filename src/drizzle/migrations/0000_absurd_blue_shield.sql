@@ -2,7 +2,7 @@ CREATE TYPE "public"."job_listings_experience_level" AS ENUM('junior', 'mid-leve
 CREATE TYPE "public"."job_listings_status" AS ENUM('draft', 'published', 'delisted');--> statement-breakpoint
 CREATE TYPE "public"."job_listings_type" AS ENUM('internship', 'part-time', 'full-time');--> statement-breakpoint
 CREATE TYPE "public"."job_listings_location_requirement" AS ENUM('in-office', 'hybrid', 'remote');--> statement-breakpoint
-CREATE TYPE "public"."job_listings_wave_interval" AS ENUM('hourly', 'yearly');--> statement-breakpoint
+CREATE TYPE "public"."job_listings_wage_interval" AS ENUM('hourly', 'yearly');--> statement-breakpoint
 CREATE TYPE "public"."job_listing_applications_stage" AS ENUM('denied', 'applied', 'interested', 'interviewed', 'hired');--> statement-breakpoint
 CREATE TABLE "users" (
 	"id" varchar PRIMARY KEY NOT NULL,
@@ -25,15 +25,16 @@ CREATE TABLE "organizations" (
 CREATE TABLE "job_listings" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"organizationId" varchar NOT NULL,
-	"title" text NOT NULL,
-	"wave" integer NOT NULL,
-	"waveInterval" "job_listings_wave_interval",
-	"stageAbbreviation" varchar,
+	"title" varchar NOT NULL,
+	"description" text NOT NULL,
+	"wage" integer,
+	"wageInterval" "job_listings_wage_interval",
+	"stateAbbreviation" varchar,
 	"city" varchar,
-	"isFeature" boolean DEFAULT false NOT NULL,
+	"isFeatured" boolean DEFAULT false NOT NULL,
 	"locationRequirement" "job_listings_location_requirement" NOT NULL,
-	"status" "job_listings_status" NOT NULL,
 	"experienceLevel" "job_listings_experience_level" NOT NULL,
+	"status" "job_listings_status" DEFAULT 'draft' NOT NULL,
 	"type" "job_listings_type" NOT NULL,
 	"postedAt" timestamp with time zone,
 	"createdAt" timestamp with time zone DEFAULT now() NOT NULL,
@@ -85,4 +86,4 @@ ALTER TABLE "job_listing_applications" ADD CONSTRAINT "job_listing_applications_
 ALTER TABLE "job_listing_applications" ADD CONSTRAINT "job_listing_applications_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "organization_user_settings" ADD CONSTRAINT "organization_user_settings_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "organization_user_settings" ADD CONSTRAINT "organization_user_settings_organizationId_organizations_id_fk" FOREIGN KEY ("organizationId") REFERENCES "public"."organizations"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "job_listings_stageAbbreviation_index" ON "job_listings" USING btree ("stageAbbreviation");
+CREATE INDEX "job_listings_stateAbbreviation_index" ON "job_listings" USING btree ("stateAbbreviation");

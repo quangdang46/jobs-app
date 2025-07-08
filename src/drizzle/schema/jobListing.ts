@@ -16,13 +16,13 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-const waveIntervals = ["hourly", "yearly"] as const;
+export const wageIntervals = ["hourly", "yearly"] as const;
 
-export type WaveInterval = (typeof waveIntervals)[number];
+export type WageInterval = (typeof wageIntervals)[number];
 
-export const waveIntervalEnum = pgEnum(
-  "job_listings_wave_interval",
-  waveIntervals
+export const wageIntervalEnum = pgEnum(
+  "job_listings_wage_interval",
+  wageIntervals
 );
 
 export const locationRequirements = ["in-office", "hybrid", "remote"] as const;
@@ -59,26 +59,24 @@ export const JobListingTable = pgTable(
   {
     id: uuid().defaultRandom().primaryKey(),
     organizationId: varchar()
-      .references(() => OrganizationTable.id, {
-        onDelete: "cascade",
-      })
+      .references(() => OrganizationTable.id, { onDelete: "cascade" })
       .notNull(),
-    title: text().notNull(),
-    wave: integer().notNull(),
-    waveInterval: waveIntervalEnum(),
-    stageAbbreviation: varchar(),
+    title: varchar().notNull(),
+    description: text().notNull(),
+    wage: integer(),
+    wageInterval: wageIntervalEnum(),
+    stateAbbreviation: varchar(),
     city: varchar(),
-    isFeature: boolean().notNull().default(false),
-
+    isFeatured: boolean().notNull().default(false),
     locationRequirement: locationRequirementEnum().notNull(),
-    status: jobListingStatusEnum().notNull(),
     experienceLevel: experienceLevelEnum().notNull(),
+    status: jobListingStatusEnum().notNull().default("draft"),
     type: jobListingTypeEnum().notNull(),
     postedAt: timestamp({ withTimezone: true }),
     createdAt,
     updatedAt,
   },
-  (table) => [index().on(table.stageAbbreviation)]
+  (table) => [index().on(table.stateAbbreviation)]
 );
 
 export const jobListingReferences = relations(

@@ -1,5 +1,5 @@
 {
-  "id": "63f0a7f3-1dce-4429-b9c2-746148f16387",
+  "id": "0bdb1492-a2d4-4288-bff3-76560f87bce9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -127,25 +127,31 @@
         },
         "title": {
           "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "wave": {
-          "name": "wave",
+        "wage": {
+          "name": "wage",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "waveInterval": {
-          "name": "waveInterval",
-          "type": "job_listings_wave_interval",
+        "wageInterval": {
+          "name": "wageInterval",
+          "type": "job_listings_wage_interval",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         },
-        "stageAbbreviation": {
-          "name": "stageAbbreviation",
+        "stateAbbreviation": {
+          "name": "stateAbbreviation",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -156,8 +162,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "isFeature": {
-          "name": "isFeature",
+        "isFeatured": {
+          "name": "isFeatured",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
@@ -170,19 +176,20 @@
           "primaryKey": false,
           "notNull": true
         },
-        "status": {
-          "name": "status",
-          "type": "job_listings_status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
         "experienceLevel": {
           "name": "experienceLevel",
           "type": "job_listings_experience_level",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "job_listings_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'draft'"
         },
         "type": {
           "name": "type",
@@ -213,11 +220,11 @@
         }
       },
       "indexes": {
-        "job_listings_stageAbbreviation_index": {
-          "name": "job_listings_stageAbbreviation_index",
+        "job_listings_stateAbbreviation_index": {
+          "name": "job_listings_stateAbbreviation_index",
           "columns": [
             {
-              "expression": "stageAbbreviation",
+              "expression": "stateAbbreviation",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -594,8 +601,8 @@
         "remote"
       ]
     },
-    "public.job_listings_wave_interval": {
-      "name": "job_listings_wave_interval",
+    "public.job_listings_wage_interval": {
+      "name": "job_listings_wage_interval",
       "schema": "public",
       "values": [
         "hourly",
