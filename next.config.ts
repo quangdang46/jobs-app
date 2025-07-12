@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   experimental: {
     useCache: true,
   },
+  transpilePackages: ["next-mdx-remote"],
 };
 
 export default nextConfig;
