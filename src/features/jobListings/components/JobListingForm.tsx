@@ -62,7 +62,7 @@ export default function JobListingForm({
     | "wageInterval"
     | "city"
     | "locationRequirement"
-  >;
+  > | null;
 }) {
   const form = useForm({
     resolver: zodResolver(jobListingSchema),

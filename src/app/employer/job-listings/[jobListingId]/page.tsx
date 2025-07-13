@@ -1,3 +1,4 @@
+import AsyncIf from "@/components/AsyncIf";
 import MarkdownPartial from "@/components/markdown/MarkdownPartial";
 import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +8,7 @@ import { JobListingTable } from "@/drizzle/schema";
 import JobListingBadges from "@/features/jobListings/components/JobListingBadges";
 import { formatJobListingStatus } from "@/features/jobListings/lib/format";
 import { getCurrentOrganization } from "@/services/clerk/lib/getCurrentUser";
+import { hasOrgUserPermission } from "@/services/clerk/lib/orgUserPermissions";
 import { and, eq } from "drizzle-orm";
 import { EditIcon } from "lucide-react";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
@@ -51,21 +53,43 @@ async function SuspendedPage({
           </div>
         </div>
         <div className="flex items-center gap-2 empty:-mt-4">
-          <Button asChild variant={"outline"}>
-            <Link href={`/employer/job-listings/${jobListing.id}/edit`}>
-              <EditIcon className="size-4" />
-              Edit
-            </Link>
-          </Button>
+          <AsyncIf
+            condition={() => hasOrgUserPermission("org:job_listings:update")}
+          >
+            <Button asChild variant={"outline"}>
+              <Link href={`/employer/job-listings/${jobListing.id}/edit`}>
+                <EditIcon className="size-4" />
+                Edit
+              </Link>
+            </Button>
+          </AsyncIf>
+          <StatusButton></StatusButton>
         </div>
       </div>
 
       <MarkdownPartial
         dialogMarkdown={<MarkdownRenderer source={jobListing.description} />}
-        mainMarkdown={<MarkdownRenderer className="prose-sm" source={jobListing.description} />}
+        mainMarkdown={
+          <MarkdownRenderer
+            className="prose-sm"
+            source={jobListing.description}
+          />
+        }
         dialogTitle="Description"
       />
     </div>
+  );
+}
+
+function StatusButton() {
+  return (
+    <AsyncIf
+      condition={() => hasOrgUserPermission("org:job_listings:change_status")}
+    >
+      <Button asChild variant={"outline"}>
+        <span>Toggle</span>
+      </Button>
+    </AsyncIf>
   );
 }
 

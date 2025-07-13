@@ -9,7 +9,7 @@ export default function page() {
       <p className="text-muted-foreground mb-6">This is text</p>
       <Card>
         <CardContent>
-          <JobListingForm></JobListingForm>
+          <JobListingForm jobListing={null}></JobListingForm>
         </CardContent>
       </Card>
     </div>

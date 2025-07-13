@@ -20,7 +20,10 @@ export async function createJobListing(
 ) {
   const { orgId } = await getCurrentOrganization();
 
-  if (orgId == null) {
+  if (
+    orgId == null ||
+    !(await hasOrgUserPermission("org:job_listings:create"))
+  ) {
     return {
       error: true,
       message: "You don't have permission to create a job listing",
