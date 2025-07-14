@@ -25,7 +25,6 @@ async function getUser(id: string) {
 
 export async function getCurrentOrganization({ allData = false } = {}) {
   const { orgId } = await auth();
-  console.log("id", orgId);
   return {
     orgId,
     organization:

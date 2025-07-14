@@ -17,8 +17,7 @@ export async function SidebarOrganizationSuspense() {
     getCurrentOrganization({ allData: true }),
   ]);
 
-  console.log(organization);
-  console.log(user);
+
 
   if (organization == null || user == null) {
     return (

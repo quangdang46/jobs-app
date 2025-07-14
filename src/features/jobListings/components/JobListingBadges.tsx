@@ -47,7 +47,7 @@ export default function JobListingBadges({
     variant: "outline",
     className,
   } satisfies ComponentProps<typeof Badge>;
-
+  console.log(isFeatured);
   return (
     <>
       {isFeatured && (
