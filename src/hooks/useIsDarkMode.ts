@@ -1,16 +1,20 @@
 "use client";
 import { useEffect, useState } from "react";
+
 export function useIsDarkMode() {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window === "undefined") {
-      return false;
-    }
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-  });
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    const controller = new AbortController();
+    // Set the initial value after hydration
+    setIsDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
+    setIsHydrated(true);
+  }, []);
 
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    const controller = new AbortController();
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const handleChange = (e: MediaQueryListEvent) => {
@@ -24,7 +28,7 @@ export function useIsDarkMode() {
     return () => {
       controller.abort();
     };
-  }, []);
+  }, [isHydrated]);
 
   return isDarkMode;
 }
