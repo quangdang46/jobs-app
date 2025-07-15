@@ -305,7 +305,8 @@ export default function JobListingForm({
           className="w-full"
         >
           <LoadingSwap isLoading={form.formState.isSubmitting}>
-            Create Job Listing
+            {/* Create Job Listing */}
+            {jobListing ? "Update Job Listing" : "Create Job Listing"}
           </LoadingSwap>
         </Button>
       </form>
