@@ -44,3 +44,45 @@ await new Promise((res) => setTimeout(res, 1000));
 
 
 Omit<T, K>	Loại bỏ K thuộc tính khỏi T	Pick
+
+
+
+const daysSincePosted = differenceInDays(postedAt, Date.now());
+differenceInDays (thường từ date-fns) tính số ngày giữa postedAt và bây giờ.
+
+return new Intl.RelativeTimeFormat(undefined, {
+  style: "narrow",
+  numeric: "always",
+}).format(daysSincePosted, "days");
+Intl.RelativeTimeFormat là API quốc tế hóa của JavaScript.
+
+Format kiểu thời gian ngắn gọn ví dụ:
+
+"3 days ago" → khi daysSincePosted = -3
+
+"in 2 days" → khi daysSincePosted = 2
+
+undefined nghĩa là tự động lấy locale từ browser hoặc server.
+
+type MyType = z.infer<typeof mySchema>;
+mySchema là schema bạn định nghĩa bằng Zod.
+
+z.infer<typeof ...> sẽ tạo ra kiểu TypeScript chính xác từ schema đó.
+
+typescript
+
+import { z } from "zod";
+
+const userSchema = z.object({
+  name: z.string(),
+  age: z.number(),
+});
+
+type User = z.infer<typeof userSchema>;
+
+Kết quả TypeScript của User sẽ giống như:
+
+type User = {
+  name: string;
+  age: number;
+}
