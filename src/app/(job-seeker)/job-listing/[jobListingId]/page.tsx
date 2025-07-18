@@ -1,10 +1,17 @@
-import JobListingItems from "@/app/(job-seeker)/_shared/JobListingItems";
 import { ClientSheet } from "@/app/(job-seeker)/job-listing/[jobListingId]/_ClientSheet";
 import IsBreakPoint from "@/components/IsBreakPoint";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Popover,
   PopoverContent,
@@ -17,18 +24,27 @@ import {
 } from "@/components/ui/resizable";
 import { SheetContent, SheetTitle, SheetHeader } from "@/components/ui/sheet";
 import { db } from "@/drizzle/db";
-import { JobListingTable } from "@/drizzle/schema";
+import {
+  JobListingApplicationTable,
+  JobListingTable,
+  UserResumeTable,
+} from "@/drizzle/schema";
+import { getJobListingApplicationIdTag } from "@/features/jobListingApplications/db/cache/jobListingApplications";
 import JobListingBadges from "@/features/jobListings/components/JobListingBadges";
+import NewJobListingApplicationForm from "@/features/jobListings/components/NewJobListingApplicationForm";
 import { getJobListingIdTag } from "@/features/jobListings/db/cache/jobListings";
 import { getOrganizationIdTag } from "@/features/organizations/db/cache/organizations";
+import { getUserResumeIdTag } from "@/features/users/db/cache/userResumes";
 import { convertSearchParamsToQueryString } from "@/lib/convertSearchParamsToString";
 import { SignUpButton } from "@/services/clerk/components/AuthButton";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
+import { differenceInDays } from "date-fns";
 import { and, eq } from "drizzle-orm";
 import { XIcon } from "lucide-react";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import React, { Suspense } from "react";
 type Props = {
   params: Promise<{ jobListingId: string }>;
@@ -160,7 +176,96 @@ async function ApplyButton({ jobListingId }: { jobListingId: string }) {
     );
   }
 
-  return <Button>Apply123</Button>;
+  const applicants = await getJobListingApplicants({
+    jobListingId,
+    userId,
+  });
+
+  if (applicants != null) {
+    const formatter = new Intl.RelativeTimeFormat(undefined, {
+      numeric: "auto",
+      style: "short",
+    });
+
+    await connection();
+
+    const difference = differenceInDays(new Date(), applicants.createdAt);
+
+    return (
+      <div className="text-muted-foreground text-sm">
+        You applied {formatter.format(difference, "days")} ago
+      </div>
+    );
+  }
+
+  const userResume = await getUserResume(userId);
+
+  if (userResume == null) {
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button>Apply</Button>
+        </PopoverTrigger>
+        <PopoverContent className="flex flex-col gap-2">
+          <p className="text-sm text-muted-foreground">
+            You must have a resume to apply for this job.
+          </p>
+          <Button asChild>
+            <Link href="/user-settings/resume">Create Resume</Link>
+          </Button>
+        </PopoverContent>
+      </Popover>
+    );
+  }
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Apply</Button>
+      </DialogTrigger>
+      <DialogContent className="md:max-w-3xl max-h-[calc(100%-2rem)] overflow-hidden flex flex-col">
+        <DialogHeader>
+          <DialogTitle>Application</DialogTitle>
+          <DialogDescription>
+            Applying for a job cannot be undone and is something you can only do
+            once per job listing.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex-1 overflow-y-auto">
+          <NewJobListingApplicationForm jobListingId={jobListingId} />
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+async function getUserResume(userId: string) {
+  "use cache";
+  cacheTag(getUserResumeIdTag(userId));
+
+  return await db.query.UserResumeTable.findFirst({
+    where: eq(UserResumeTable.userId, userId),
+  });
+}
+
+async function getJobListingApplicants({
+  jobListingId,
+  userId,
+}: {
+  jobListingId: string;
+  userId: string;
+}) {
+  "use cache";
+  cacheTag(getJobListingApplicationIdTag({ jobListingId, userId }));
+
+  const data = await db.query.JobListingApplicationTable.findFirst({
+    where: and(
+      eq(JobListingApplicationTable.jobListingId, jobListingId),
+      eq(JobListingApplicationTable.userId, userId)
+    ),
+  });
+
+  return data;
 }
 
 async function getJobListing(id: string) {

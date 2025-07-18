@@ -49,3 +49,4 @@ export const jobListingSchema = z
 export const jobListingAiSearchSchema = z.object({
   query: z.string().min(1, "Required"),
 });
+
