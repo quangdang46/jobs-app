@@ -34,7 +34,7 @@ A modern job board application built with Next.js 15, featuring a multi-tenant a
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/quangdang46/jobs-app.git
 cd jobs-app
 ```
 
@@ -45,11 +45,18 @@ npm install
 
 3. Set up environment variables:
 ```bash
-cp .env.example .env.local
+cp .env.example .env
 ```
 
 Fill in the required environment variables:
-- `DATABASE_URL` - PostgreSQL connection string
+- Set up connecting database
+    - `DATABASE_URL` - PostgreSQL connection string if using neon postgresql
+    - If manual postgresql in local using docker compose and setup these variables
+        -   `DB_HOST`
+        -   `DB_PORT`
+        -   `DB_USER`
+        -   `DB_PASSWORD`
+        -   `DB_NAME`
 - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk publishable key
 - `CLERK_SECRET_KEY` - Clerk secret key
 - `CLERK_WEBHOOK_SECRET` - Clerk webhook secret
@@ -57,10 +64,16 @@ Fill in the required environment variables:
 
 4. Set up the database:
 ```bash
-npm run db:push
+npm run db:generate
+npm run db:migrate
+```
+5. Explore database:
+```bash
+npm run db:studio
+
 ```
 
-5. Start the development servers:
+6. Start the development servers:
 
 In one terminal:
 ```bash
@@ -72,7 +85,7 @@ In another terminal (for background jobs):
 npm run inngest
 ```
 
-The application will be available at `http://localhost:3000`.
+The application will be available at `http://localhost:8288`.
 
 ## Development Commands
 
