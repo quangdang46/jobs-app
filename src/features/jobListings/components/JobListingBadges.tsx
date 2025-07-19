@@ -7,7 +7,7 @@ import {
   formatLocationRequirement,
   formatWage,
 } from "@/features/jobListings/lib/format";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/utils";
 import {
   BanknoteIcon,
   BuildingIcon,

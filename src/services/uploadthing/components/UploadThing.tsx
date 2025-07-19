@@ -5,7 +5,7 @@ import {
   generateUploadDropzone,
 } from "@uploadthing/react";
 import { CustomFileRouter } from "@/services/uploadthing/router";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/utils";
 import { ComponentProps } from "react";
 import { toast } from "sonner";
 import { UploadThingError } from "uploadthing/server";

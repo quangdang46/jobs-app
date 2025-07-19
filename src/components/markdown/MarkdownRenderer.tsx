@@ -1,6 +1,6 @@
 import React from "react";
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/utils";
 import { markdownClassNames } from "@/components/markdown/_MarkdownEditor";
 import remarkGfm from "remark-gfm";
 export default function MarkdownRenderer({

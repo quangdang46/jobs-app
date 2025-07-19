@@ -1,8 +1,8 @@
 "use client";
 import { useIsDarkMode } from "@/hooks/useIsDarkMode";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/utils";
 import {
-    BlockTypeSelect,
+  BlockTypeSelect,
   BoldItalicUnderlineToggles,
   headingsPlugin,
   InsertTable,
@@ -33,7 +33,11 @@ export default function IntervalMarkdownEditor({
     <MDXEditor
       ref={ref}
       {...props}
-      className={cn(markdownClassNames, isDarkMode && "dark-theme prose-invert", className)}
+      className={cn(
+        markdownClassNames,
+        isDarkMode && "dark-theme prose-invert",
+        className
+      )}
       suppressHtmlProcessing
       plugins={[
         headingsPlugin(),

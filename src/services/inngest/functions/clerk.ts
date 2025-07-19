@@ -1,4 +1,4 @@
-import { env } from "@/data/env/server";
+import { env } from "@/config/env/server";
 import {
   deleteOrganization,
   insertOrganization,

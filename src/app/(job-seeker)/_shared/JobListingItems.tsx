@@ -19,8 +19,8 @@ import {
 import JobListingBadges from "@/features/jobListings/components/JobListingBadges";
 import { getJobListingGlobalTag } from "@/features/jobListings/db/cache/jobListings";
 import { getOrganizationIdTag } from "@/features/organizations/db/cache/organizations";
-import { convertSearchParamsToQueryString } from "@/lib/convertSearchParamsToString";
-import { cn } from "@/lib/utils";
+import { convertSearchParamsToQueryString } from "@/utils/convertSearchParamsToString";
+import { cn } from "@/utils/utils";
 import { differenceInDays } from "date-fns";
 import { asc, desc, eq, ilike, or } from "drizzle-orm";
 import { and, SQL } from "drizzle-orm";
