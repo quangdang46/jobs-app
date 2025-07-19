@@ -22,19 +22,30 @@ async function SuspendedPage() {
     return null;
   }
 
-  const jobListing = await getMostRecentJobListing(orgId);
+  const jobListings = await getMostRecentJobListing(orgId);
 
-  if (jobListing == null) {
+  if (jobListings.length === 0) {
     redirect("/employer/job-listings/new");
-  } else {
-    redirect(`/employer/job-listings/${jobListing.id}`);
   }
+
+  return (
+    <div className="flex flex-col gap-4">
+      {jobListings.map((jobListing) => (
+        <div className="flex flex-col gap-2" key={jobListing.id}>
+          <div className="text-lg font-medium">{jobListing.id}</div>
+        </div>
+      ))}
+    </div>
+  );
+  // } else {
+  //   redirect(`/employer/job-listings/${jobListing.id}`);
+  // }
 }
 
 async function getMostRecentJobListing(organizationId: string) {
   "use cache";
   cacheTag(getJobListingOrganizationTag(organizationId));
-  return await db.query.JobListingTable.findFirst({
+  return await db.query.JobListingTable.findMany({
     where: eq(JobListingTable.organizationId, organizationId),
     orderBy: desc(JobListingTable.createdAt),
     columns: { id: true },

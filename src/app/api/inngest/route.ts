@@ -7,6 +7,7 @@ import {
   clerkUpdateOrganization,
   clerkUpdateUser,
   jobListingApplicationCreated,
+  resumeUploaded,
 } from "@/services/inngest/functions/clerk";
 import { serve } from "inngest/next";
 
@@ -21,5 +22,6 @@ export const { GET, POST, PUT } = serve({
     clerkDeleteOrganization,
     clerkUpdateOrganization,
     jobListingApplicationCreated,
+    resumeUploaded,
   ],
 });
