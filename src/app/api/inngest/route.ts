@@ -1,13 +1,18 @@
 import { inngest } from "@/services/inngest/client";
 import {
   clerkCreateOrganization,
+  clerkCreateOrgMembership,
   clerkCreateUser,
   clerkDeleteOrganization,
+  clerkDeleteOrgMembership,
   clerkDeleteUser,
   clerkUpdateOrganization,
   clerkUpdateUser,
 } from "@/services/inngest/functions/clerk";
-import { prepareDailyUserJobListingNotifications, sendDailyUserJobListingEmail } from "@/services/inngest/functions/email";
+import {
+  prepareDailyUserJobListingNotifications,
+  sendDailyUserJobListingEmail,
+} from "@/services/inngest/functions/email";
 import { rankingApplication } from "@/services/inngest/functions/jobListingApplication";
 import { createAISummary } from "@/services/inngest/functions/resume";
 import { serve } from "inngest/next";
@@ -26,5 +31,7 @@ export const { GET, POST, PUT } = serve({
     rankingApplication,
     prepareDailyUserJobListingNotifications,
     sendDailyUserJobListingEmail,
+    clerkCreateOrgMembership,
+    clerkDeleteOrgMembership,
   ],
 });

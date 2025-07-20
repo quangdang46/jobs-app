@@ -2,6 +2,7 @@ import { JobListingApplicationTable, JobListingTable } from "@/drizzle/schema";
 import {
   DeletedObjectJSON,
   OrganizationJSON,
+  OrganizationMembershipJSON,
   UserJSON,
 } from "@clerk/nextjs/server";
 import { EventSchemas, Inngest } from "inngest";
@@ -63,6 +64,9 @@ type Events = {
       name: string;
     };
   };
+
+  "clerk/organizationMembership.created": ClerkWebhookData<OrganizationMembershipJSON>;
+  "clerk/organizationMembership.deleted": ClerkWebhookData<OrganizationMembershipJSON>;
 };
 
 // Create a client to send and receive events
