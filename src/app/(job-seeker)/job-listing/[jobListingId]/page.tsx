@@ -35,7 +35,7 @@ import NewJobListingApplicationForm from "@/features/jobListings/components/NewJ
 import { getJobListingIdTag } from "@/features/jobListings/db/cache/jobListings";
 import { getOrganizationIdTag } from "@/features/organizations/db/cache/organizations";
 import { getUserResumeIdTag } from "@/features/users/db/cache/userResumes";
-import { convertSearchParamsToQueryString } from "@/utils/convertSearchParamsToString";
+import { convertSearchParamsToQueryString } from "@/lib/convertSearchParamsToString";
 import { SignUpButton } from "@/services/clerk/components/AuthButton";
 import { getCurrentUser } from "@/services/clerk/lib/getCurrentUser";
 import { differenceInDays } from "date-fns";

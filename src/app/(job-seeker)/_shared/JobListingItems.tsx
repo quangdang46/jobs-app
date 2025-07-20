@@ -19,8 +19,8 @@ import {
 import JobListingBadges from "@/features/jobListings/components/JobListingBadges";
 import { getJobListingGlobalTag } from "@/features/jobListings/db/cache/jobListings";
 import { getOrganizationIdTag } from "@/features/organizations/db/cache/organizations";
-import { convertSearchParamsToQueryString } from "@/utils/convertSearchParamsToString";
-import { cn } from "@/utils/utils";
+import { convertSearchParamsToQueryString } from "@/lib/convertSearchParamsToString";
+import { cn } from "@/lib/utils";
 import { differenceInDays } from "date-fns";
 import { asc, desc, eq, ilike, or } from "drizzle-orm";
 import { and, SQL } from "drizzle-orm";
@@ -55,10 +55,9 @@ export default function JobListingItems(props: Props) {
 
 async function SuspendedComponent({ params, searchParams }: Props) {
   const jobListingId = params ? (await params).jobListingId : undefined;
-  const jobListings = await gẹtJobListings(await searchParams, jobListingId);
-
   const { success, data } = searchParamsSchema.safeParse(await searchParams);
   const search = success ? data : {};
+  const jobListings = await getJobListings(search, jobListingId);
 
   if (jobListings.length === 0) {
     return (
@@ -185,7 +184,7 @@ async function DaysSincePosting({ postedAt }: { postedAt: Date }) {
   }).format(daysSincePosted, "days");
 }
 
-async function gẹtJobListings(
+async function getJobListings(
   searchParams: z.infer<typeof searchParamsSchema>,
   jobListingId: string | undefined
 ) {
@@ -226,7 +225,7 @@ async function gẹtJobListings(
     whereConditions.push(eq(JobListingTable.type, searchParams.type));
   }
 
-  if (searchParams.jobIds) {
+  if (searchParams.jobIds && searchParams.jobIds.length > 0) {
     whereConditions.push(
       or(...searchParams.jobIds.map((jobId) => eq(JobListingTable.id, jobId)))
     );

@@ -12,12 +12,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import { getAISearchJobListings } from "@/features/jobListings/actions/actions";
 import { JobListingAISearchFormSchema } from "@/features/jobListings/actions/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 export default function JobListingAISearchForm() {
+  const router = useRouter();
   const form = useForm({
     resolver: zodResolver(JobListingAISearchFormSchema),
     defaultValues: {
@@ -26,7 +30,15 @@ export default function JobListingAISearchForm() {
   });
 
   async function onSubmit(data: z.infer<typeof JobListingAISearchFormSchema>) {
-    console.log(data);
+    const result = await getAISearchJobListings(data);
+    if (result.error) {
+      toast.error(result.message);
+      return;
+    }
+
+    const params = new URLSearchParams();
+    result.jobIds.forEach((id) => params.append("jobIds", id));
+    router.push(`/?${params.toString()}`);
   }
 
   return (

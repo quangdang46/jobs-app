@@ -4,8 +4,14 @@ import { db } from "@/drizzle/db";
 import { JobListingTable, UserResumeTable } from "@/drizzle/schema";
 import { newJobListingApplicationSchema } from "@/features/jobListingApplications/actions/schema";
 import { insertJobListingApplication } from "@/features/jobListingApplications/db/jobListingApplications";
-import { jobListingSchema } from "@/features/jobListings/actions/schemas";
-import { getJobListingIdTag } from "@/features/jobListings/db/cache/jobListings";
+import {
+  JobListingAISearchFormSchema,
+  jobListingSchema,
+} from "@/features/jobListings/actions/schemas";
+import {
+  getJobListingGlobalTag,
+  getJobListingIdTag,
+} from "@/features/jobListings/db/cache/jobListings";
 import {
   insertJobListing,
   updateJobListing as updateJobListingDb,
@@ -22,6 +28,7 @@ import {
   getCurrentUser,
 } from "@/services/clerk/lib/getCurrentUser";
 import { hasOrgUserPermission } from "@/services/clerk/lib/orgUserPermissions";
+import { getMatchingJobListings } from "@/services/inngest/ai/getMatchingJobListings";
 import { inngest } from "@/services/inngest/client";
 import { and, eq } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
@@ -229,6 +236,53 @@ export async function createJobListingApplication(
     error: false,
     message: "Your application was successfully submitted",
   };
+}
+
+export async function getAISearchJobListings(
+  dataQuery: z.infer<typeof JobListingAISearchFormSchema>
+): Promise<
+  { error: true; message: string } | { error: false; jobIds: string[] }
+> {
+  const { success, data } = JobListingAISearchFormSchema.safeParse(dataQuery);
+
+  if (!success) {
+    return {
+      error: true,
+      message: "There was an error with your search query",
+    };
+  }
+
+  const { query } = data;
+  const allJobListings = await getJobListings();
+  const matchedJobListings = await getMatchingJobListings(
+    query,
+    allJobListings,
+    {
+      maxResults: 10,
+    }
+  );
+
+  if (matchedJobListings.length === 0) {
+    return {
+      error: true,
+      message: "No jobs found",
+    };
+  }
+
+  return {
+    error: false,
+    jobIds: matchedJobListings,
+  };
+}
+
+async function getJobListings() {
+  "use cache";
+
+  cacheTag(getJobListingGlobalTag());
+
+  return await db.query.JobListingTable.findMany({
+    where: eq(JobListingTable.status, "published"),
+  });
 }
 
 async function getUserResume(userId: string) {
