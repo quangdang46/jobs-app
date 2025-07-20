@@ -17,6 +17,8 @@ export const env = createEnv({
     
     // Optional, will be constructed if not provided
     DATABASE_URL: z.string().optional(),
+
+    GEMINI_API_KEY: z.string().min(1),
   },
   emptyStringAsUndefined: true,
   experimental__runtimeEnv: process.env,

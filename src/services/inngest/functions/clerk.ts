@@ -205,20 +205,3 @@ export const clerkDeleteOrganization = inngest.createFunction(
   }
 );
 
-export const jobListingApplicationCreated = inngest.createFunction(
-  {
-    id: "app/jobListingApplication.created",
-    name: "Job Listing Application Created",
-  },
-  { event: "app/jobListingApplication.created" },
-  async ({ event, step }) => {}
-);
-
-export const resumeUploaded = inngest.createFunction(
-  {
-    id: "app/resume/resume.uploaded",
-    name: "Resume Uploaded",
-  },
-  { event: "app/resume/resume.uploaded" },
-  async ({ event, step }) => {}
-);

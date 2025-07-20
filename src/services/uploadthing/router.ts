@@ -55,7 +55,7 @@ export const customFileRouter = {
       await inngest.send({
         name: "app/resume/resume.uploaded",
         user: {
-          id: userId,
+          userId,
         },
       });
 

@@ -61,13 +61,14 @@ Fill in the required environment variables:
 - `CLERK_SECRET_KEY` - Clerk secret key
 - `CLERK_WEBHOOK_SECRET` - Clerk webhook secret
 - `UPLOADTHING_TOKEN` - UploadThing API token
+- `GEMINI_API_KEY` - Gemini API key visit [HERE](https://aistudio.google.com/apikey)
 
-4. Set up the database:
+1. Set up the database:
 ```bash
 npm run db:generate
 npm run db:migrate
 ```
-5. Explore database:
+1. Explore database:
 ```bash
 npm run db:studio
 

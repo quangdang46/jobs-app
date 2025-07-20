@@ -28,7 +28,7 @@ type Events = {
   };
   "app/resume/resume.uploaded": {
     user: {
-      id: string;
+      userId: string;
     };
   };
 };
