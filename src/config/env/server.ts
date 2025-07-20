@@ -9,16 +9,18 @@ export const env = createEnv({
     DB_USER: z.string().optional(),
     DB_PASSWORD: z.string().optional(),
     DB_NAME: z.string().optional(),
-    
+
     // Required for all environments
     CLERK_SECRET_KEY: z.string().min(1),
     CLERK_WEBHOOK_SECRET: z.string().min(1),
     UPLOADTHING_TOKEN: z.string().min(1),
-    
+
     // Optional, will be constructed if not provided
     DATABASE_URL: z.string().optional(),
 
     GEMINI_API_KEY: z.string().min(1),
+    RESEND_API_KEY: z.string().min(1),
+    SERVER_URL: z.string().min(1),
   },
   emptyStringAsUndefined: true,
   experimental__runtimeEnv: process.env,
@@ -33,7 +35,7 @@ export const env = createEnv({
         DATABASE_URL,
         ...rest
       } = val;
-      
+
       // If DATABASE_URL is provided, use it directly
       if (DATABASE_URL) {
         return {
@@ -41,7 +43,7 @@ export const env = createEnv({
           DATABASE_URL,
         };
       }
-      
+
       // If individual DB parts are provided, construct DATABASE_URL
       if (DB_HOST && DB_PORT && DB_USER && DB_PASSWORD && DB_NAME) {
         return {
@@ -49,9 +51,11 @@ export const env = createEnv({
           DATABASE_URL: `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
         };
       }
-      
+
       // Neither DATABASE_URL nor complete DB parts provided
-      throw new Error("Either DATABASE_URL or all DB connection parts (DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME) must be provided");
+      throw new Error(
+        "Either DATABASE_URL or all DB connection parts (DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME) must be provided"
+      );
     });
   },
 });

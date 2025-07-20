@@ -1,3 +1,4 @@
+import { JobListingApplicationTable, JobListingTable } from "@/drizzle/schema";
 import {
   DeletedObjectJSON,
   OrganizationJSON,
@@ -29,6 +30,37 @@ type Events = {
   "app/resume/resume.uploaded": {
     user: {
       userId: string;
+    };
+  };
+  "app/email.daily-user-job-listings": {
+    data: {
+      aiPrompt?: string;
+      jobListings: (Omit<
+        typeof JobListingTable.$inferSelect,
+        "createdAt" | "postedAt" | "updatedAt" | "status" | "organizationId"
+      > & { organizationName: string })[];
+    };
+    user: {
+      email: string;
+      name: string;
+    };
+  };
+  "app/email.daily-organization-user-applications": {
+    data: {
+      applications: (Pick<
+        typeof JobListingApplicationTable.$inferSelect,
+        "rating"
+      > & {
+        userName: string;
+        organizationId: string;
+        organizationName: string;
+        jobListingId: string;
+        jobListingTitle: string;
+      })[];
+    };
+    user: {
+      email: string;
+      name: string;
     };
   };
 };
