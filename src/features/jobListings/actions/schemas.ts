@@ -46,7 +46,6 @@ export const jobListingSchema = z
     }
   );
 
-export const jobListingAiSearchSchema = z.object({
+export const JobListingAISearchFormSchema = z.object({
   query: z.string().min(1, "Required"),
 });
-
