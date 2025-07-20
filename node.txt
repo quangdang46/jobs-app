@@ -86,3 +86,39 @@ type User = {
   name: string;
   age: number;
 }
+
+
+
+Object.groupBy() là gì?
+Đây là một hàm JavaScript chuẩn (từ ES2024) để gom nhóm các phần tử của một mảng theo key bạn chỉ định.
+
+✅ Cú pháp cơ bản:
+
+const grouped = Object.groupBy(array, (item) => item.key);
+⟶ Trả về một object mà mỗi key là kết quả của function (item) => key, và value là một array các phần tử khớp key đó.
+
+Ví dụ cụ thể dễ hiểu:
+Giả sử dữ liệu như sau:
+
+const userNotifications = [
+  { userId: 1, organizationId: 10 },
+  { userId: 1, organizationId: 20 },
+  { userId: 2, organizationId: 30 }
+];
+👉 Sau khi chạy:
+
+const groupedNotifications = Object.groupBy(
+  userNotifications,
+  (n) => n.userId
+);
+✅ Kết quả sẽ là:
+
+{
+  "1": [
+    { userId: 1, organizationId: 10 },
+    { userId: 1, organizationId: 20 }
+  ],
+  "2": [
+    { userId: 2, organizationId: 30 }
+  ]
+}
