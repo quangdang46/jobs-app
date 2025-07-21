@@ -16,9 +16,9 @@ import React from "react";
 import z from "zod";
 import LoadingSwap from "@/components/LoadingSwap";
 import { toast } from "sonner";
-import { createJobListingApplication } from "@/features/jobListings/actions/actions";
 import { newJobListingApplicationSchema } from "@/features/jobListingApplications/actions/schema";
 import { useForm } from "react-hook-form";
+import { createJobListingApplication } from "@/features/jobListingApplications/actions/actions";
 
 export default function NewJobListingApplicationForm({
   jobListingId,

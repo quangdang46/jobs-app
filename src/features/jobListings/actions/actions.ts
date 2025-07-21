@@ -1,9 +1,7 @@
 "use server";
 
 import { db } from "@/drizzle/db";
-import { JobListingTable, UserResumeTable } from "@/drizzle/schema";
-import { newJobListingApplicationSchema } from "@/features/jobListingApplications/actions/schema";
-import { insertJobListingApplication } from "@/features/jobListingApplications/db/jobListingApplications";
+import { JobListingTable } from "@/drizzle/schema";
 import {
   JobListingAISearchFormSchema,
   jobListingSchema,
@@ -22,14 +20,9 @@ import {
   hasReachedMaxPublishedJobListings,
 } from "@/features/jobListings/lib/planfeatureHelpers";
 import { getNextJobListingStatus } from "@/features/jobListings/lib/utils";
-import { getUserResumeIdTag } from "@/features/users/db/cache/userResumes";
-import {
-  getCurrentOrganization,
-  getCurrentUser,
-} from "@/services/clerk/lib/getCurrentUser";
+import { getCurrentOrganization } from "@/services/clerk/lib/getCurrentUser";
 import { hasOrgUserPermission } from "@/services/clerk/lib/orgUserPermissions";
 import { getMatchingJobListings } from "@/services/inngest/ai/getMatchingJobListings";
-import { inngest } from "@/services/inngest/client";
 import { and, eq } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import { redirect } from "next/navigation";
@@ -194,50 +187,6 @@ export async function deleteJobListing(id: string) {
   redirect("/employer");
 }
 
-export async function createJobListingApplication(
-  jobListingId: string,
-  unsafeData: z.infer<typeof newJobListingApplicationSchema>
-) {
-  const permissionError = {
-    error: true,
-    message: "You don't have permission to submit an application",
-  };
-  const { userId } = await getCurrentUser();
-  if (userId == null) return permissionError;
-
-  const [userResume, jobListing] = await Promise.all([
-    getUserResume(userId),
-    getPublicJobListing(jobListingId),
-  ]);
-  if (userResume == null || jobListing == null) return permissionError;
-
-  const { success, data } =
-    newJobListingApplicationSchema.safeParse(unsafeData);
-
-  if (!success) {
-    return {
-      error: true,
-      message: "There was an error submitting your application",
-    };
-  }
-
-  await insertJobListingApplication({
-    jobListingId,
-    userId,
-    ...data,
-  });
-
-  await inngest.send({
-    name: "app/jobListingApplication.created",
-    data: { jobListingId, userId },
-  });
-
-  return {
-    error: false,
-    message: "Your application was successfully submitted",
-  };
-}
-
 export async function getAISearchJobListings(
   dataQuery: z.infer<typeof JobListingAISearchFormSchema>
 ): Promise<
@@ -282,28 +231,5 @@ async function getJobListings() {
 
   return await db.query.JobListingTable.findMany({
     where: eq(JobListingTable.status, "published"),
-  });
-}
-
-async function getUserResume(userId: string) {
-  "use cache";
-  cacheTag(getUserResumeIdTag(userId));
-
-  return db.query.UserResumeTable.findFirst({
-    where: eq(UserResumeTable.userId, userId),
-    columns: { userId: true },
-  });
-}
-
-async function getPublicJobListing(id: string) {
-  "use cache";
-  cacheTag(getJobListingIdTag(id));
-
-  return db.query.JobListingTable.findFirst({
-    where: and(
-      eq(JobListingTable.id, id),
-      eq(JobListingTable.status, "published")
-    ),
-    columns: { id: true },
   });
 }
