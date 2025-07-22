@@ -158,6 +158,7 @@ A modern job board application built with Next.js 15, featuring a multi-tenant a
 - PostgreSQL database
 - Clerk account for authentication
 - UploadThing account for file uploads
+- Inngest account for background jobs
 
 ### Installation
 
@@ -215,7 +216,71 @@ In another terminal (for background jobs):
 npm run inngest
 ```
 
-The application will be available at `http://localhost:8288`.
+The application will be available at `http://localhost:3000`.
+
+## Deployment to Production
+
+### Vercel Deployment
+
+1. Deploy to Vercel:
+```bash
+vercel --prod
+```
+
+### Inngest Production Setup
+
+**Important:** Inngest has separate environments (Development/Production). When deploying to production, you need to:
+
+#### Step 1: Create Production App in Inngest
+1. **Inngest Dashboard** → **Apps** → **Create App**
+2. **App URL**: `https://your-domain.vercel.app/api/inngest`
+3. **Environment**: Select **Production**
+
+#### Step 2: Get Production Keys
+1. **Inngest Dashboard** → **Settings** → **Keys**
+2. Make sure you're in **Production** environment (check top-left dropdown)
+3. Copy:
+   - **Signing Key**: `signkey-prod-xxx...`
+   - **Event Key**: `xxx...`
+
+#### Step 3: Update Vercel Environment Variables
+**Vercel Dashboard** → Project Settings → **Environment Variables**:
+```env
+INNGEST_SIGNING_KEY=signkey-prod-xxx...
+INNGEST_EVENT_KEY=xxx...
+```
+
+#### Step 4: Update Clerk Webhooks
+**Critical:** Update webhook URLs from development to production:
+
+1. **Clerk Dashboard** → **Webhooks**
+2. Find existing webhook (previously pointing to `http://localhost:3000/api/inngest`)
+3. **Edit** webhook URL to: `https://your-domain.vercel.app/api/inngest`
+4. **Copy the new webhook secret**
+5. Update `CLERK_WEBHOOK_SECRET` in Vercel environment variables
+
+#### Step 5: Redeploy
+```bash
+vercel --prod
+```
+
+### Common Issues
+
+**Authentication Failed Error:**
+- Ensure you're using Production environment keys from Inngest
+- Verify `CLERK_WEBHOOK_SECRET` matches the production webhook secret
+- Check that webhook URL points to production domain, not localhost
+
+**Webhook Not Triggering:**
+- Confirm Clerk webhook URL is updated to production
+- Verify `CLERK_WEBHOOK_SECRET` environment variable is correct
+- Test webhook delivery in Clerk Dashboard
+
+### Verification
+After deployment, verify:
+1. Visit `https://your-domain.vercel.app/api/inngest` - should return JSON with function count
+2. **Inngest Dashboard** → **Functions** - should show all 14 functions
+3. Create a test user in Clerk - should trigger webhook events in Inngest
 
 ## Development Commands
 
