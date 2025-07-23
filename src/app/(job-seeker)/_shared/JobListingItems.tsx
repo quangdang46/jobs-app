@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { differenceInDays } from "date-fns";
 import { asc, desc, eq, ilike, or } from "drizzle-orm";
 import { and, SQL } from "drizzle-orm";
+import { ClipboardListIcon } from "lucide-react";
 import { connection } from "next/dist/server/request/connection";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import Link from "next/link";
@@ -61,18 +62,24 @@ async function SuspendedComponent({ params, searchParams }: Props) {
 
   if (jobListings.length === 0) {
     return (
-      <div className="text-muted-foreground text-2xl font-bold">
-        No job listings found
+      <div className="text-center py-16">
+        <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-muted/50 flex items-center justify-center">
+          <ClipboardListIcon className="w-12 h-12 text-muted-foreground" />
+        </div>
+        <h3 className="text-2xl font-semibold mb-2">No job listings found</h3>
+        <p className="text-muted-foreground mb-6">
+          Try adjusting your search filters or check back later for new opportunities
+        </p>
       </div>
     );
   }
 
   return (
     <Suspense>
-      <div className="space-y-4">
+      <div className="grid gap-6">
         {jobListings.map((jobListing) => (
           <Link
-            className="block"
+            className="block group"
             href={`/job-listing/${
               jobListing.id
             }?${convertSearchParamsToQueryString(search)}`}
@@ -85,9 +92,6 @@ async function SuspendedComponent({ params, searchParams }: Props) {
           </Link>
         ))}
       </div>
-
-      {/* <JobListingItems jobListings={jobListings} />
-       */}
     </Suspense>
   );
 }
@@ -123,28 +127,32 @@ function JobListingListItem({
   return (
     <Card
       className={cn(
-        "@container",
-        jobListing.isFeatured && "border-featured bg-featured/20"
+        "@container transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-2",
+        jobListing.isFeatured 
+          ? "border-featured bg-gradient-to-r from-featured/10 to-featured/5 shadow-featured/20" 
+          : "hover:border-primary/20"
       )}
     >
       <CardHeader>
-        <div className="flex gap-4">
-          <Avatar className="size-14 @max-sm:hidden">
+        <div className="flex gap-4 items-start">
+          <Avatar className="size-16 @max-sm:hidden ring-2 ring-background shadow-lg">
             <AvatarImage
               src={organization.imageUrl ?? undefined}
               alt={organization.name}
             />
-            <AvatarFallback className="uppercase bg-primary text-primary-foreground">
+            <AvatarFallback className="uppercase bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold">
               {nameInitials}
             </AvatarFallback>
           </Avatar>
-          <div className="flex flex-col gap-1">
-            <CardTitle className="text-xl">{jobListing.title}</CardTitle>
-            <CardDescription className="text-base">
+          <div className="flex flex-col gap-2 flex-1">
+            <CardTitle className="text-2xl font-bold group-hover:text-primary transition-colors">
+              {jobListing.title}
+            </CardTitle>
+            <CardDescription className="text-base font-medium">
               {organization.name}
             </CardDescription>
             {jobListing.postedAt != null && (
-              <div className="text-sm font-medium text-primary @min-md:hidden">
+              <div className="text-sm font-medium text-primary/80 @min-md:hidden">
                 <Suspense fallback={jobListing.postedAt.toLocaleDateString()}>
                   <DaysSincePosting postedAt={jobListing.postedAt} />
                 </Suspense>
@@ -152,7 +160,7 @@ function JobListingListItem({
             )}
           </div>
           {jobListing.postedAt != null && (
-            <div className="text-sm font-medium text-primary ml-auto @max-md:hidden">
+            <div className="text-sm font-medium text-primary/80 @max-md:hidden">
               <Suspense fallback={jobListing.postedAt.toLocaleDateString()}>
                 <DaysSincePosting postedAt={jobListing.postedAt} />
               </Suspense>
@@ -160,10 +168,13 @@ function JobListingListItem({
           )}
         </div>
       </CardHeader>
-      <CardContent className="flex flex-wrap gap-2">
+      <CardContent className="flex flex-wrap gap-2 pt-0">
         <JobListingBadges
           jobListing={jobListing}
-          className={jobListing.isFeatured ? "border-primary/35" : undefined}
+          className={cn(
+            "transition-all duration-200",
+            jobListing.isFeatured ? "border-featured/40 bg-featured/10" : "hover:border-primary/30"
+          )}
         />
       </CardContent>
     </Card>
@@ -175,7 +186,11 @@ async function DaysSincePosting({ postedAt }: { postedAt: Date }) {
   const daysSincePosted = differenceInDays(postedAt, new Date());
 
   if (daysSincePosted === 0) {
-    return <Badge variant="outline">New</Badge>;
+    return (
+      <Badge className="bg-green-100 text-green-800 border-green-200 animate-pulse">
+        ✨ New
+      </Badge>
+    );
   }
 
   return new Intl.RelativeTimeFormat(undefined, {

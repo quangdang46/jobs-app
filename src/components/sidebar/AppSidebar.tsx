@@ -24,16 +24,20 @@ export default function AppSidebar({
   return (
     <SidebarProvider className="overflow-y-hidden">
       <AppSideBarProvider>
-        <Sidebar collapsible="icon" className="overflow-hidden">
-          <SidebarHeader className="flex-row">
+        <Sidebar collapsible="icon" className="overflow-hidden border-r-2 border-primary/10">
+          <SidebarHeader className="flex-row border-b border-primary/10 bg-gradient-to-r from-primary/5 to-transparent">
             <SidebarTrigger></SidebarTrigger>
-            <span className="text-xl text-nowrap">Jobs</span>
+            <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent text-nowrap">
+              Jobs
+            </span>
           </SidebarHeader>
 
-          <SidebarContent>{content}</SidebarContent>
+          <SidebarContent className="bg-gradient-to-b from-background to-muted/10">
+            {content}
+          </SidebarContent>
 
           <SignedIn>
-            <SidebarFooter>
+            <SidebarFooter className="border-t border-primary/10 bg-gradient-to-r from-primary/5 to-transparent">
               <SidebarMenu>
                 <SidebarMenuItem>{footerButton}</SidebarMenuItem>
               </SidebarMenu>
