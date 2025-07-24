@@ -6,6 +6,12 @@ import {
   ClipboardListIcon,
   LayoutDashboard,
   LogInIcon,
+  BuildingIcon,
+  DollarSignIcon,
+  MapPinIcon,
+  FolderIcon,
+  ClockIcon,
+  FileTextIcon,
 } from "lucide-react";
 import { ReactNode } from "react";
 
@@ -22,7 +28,6 @@ export default function layout({
         <>
           {sidebar}
           <SidebarNavMenuGroup
-            className="mt-auto"
             items={[
               { href: "/", icon: <ClipboardListIcon />, label: "Job Board" },
               {
@@ -30,6 +35,28 @@ export default function layout({
                 icon: <BrainCircuitIcon />,
                 label: "AI Search",
               },
+              { href: "/categories", icon: <FolderIcon />, label: "Job Categories" },
+              { href: "/recently-viewed", icon: <ClockIcon />, label: "Recently Viewed" },
+            ]}
+          ></SidebarNavMenuGroup>
+          <SidebarNavMenuGroup
+            title="Search Tools"
+            items={[
+              { href: "/salary-search", icon: <DollarSignIcon />, label: "Salary Search" },
+              { href: "/location-search", icon: <MapPinIcon />, label: "Location Search" },
+              { href: "/company-profile", icon: <BuildingIcon />, label: "Company Profiles" },
+            ]}
+          ></SidebarNavMenuGroup>
+          <SidebarNavMenuGroup
+            title="Job Management"
+            items={[
+              { href: "/job-templates", icon: <FileTextIcon />, label: "Job Templates" },
+              { href: "/job-expiry", icon: <ClockIcon />, label: "Job Expiry" },
+            ]}
+          ></SidebarNavMenuGroup>
+          <SidebarNavMenuGroup
+            className="mt-auto"
+            items={[
               {
                 href: "/employer",
                 icon: <LayoutDashboard />,

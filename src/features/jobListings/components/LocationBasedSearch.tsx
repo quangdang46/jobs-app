@@ -112,7 +112,7 @@ export default function LocationBasedSearch() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-6xl mx-auto p-6">
         <div className="mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent mb-2">
             Jobs Near You
@@ -213,7 +213,7 @@ export default function LocationBasedSearch() {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Map Placeholder */}
           <div className="lg:col-span-1">
             <Card className="sticky top-6">
@@ -261,7 +261,7 @@ export default function LocationBasedSearch() {
           </div>
 
           {/* Job Results */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-2xl font-semibold">
                 {filteredJobs.length} Jobs Found
@@ -277,7 +277,7 @@ export default function LocationBasedSearch() {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
               {filteredJobs.map(job => {
                 const getDistanceColor = (distance: string) => {
                   if (distance === "Remote") return "text-blue-600";
@@ -296,7 +296,7 @@ export default function LocationBasedSearch() {
                 };
 
                 return (
-                  <Card key={job.id} className="hover:shadow-lg transition-shadow">
+                  <Card key={job.id} className="hover:shadow-lg transition-shadow max-w-lg w-full">
                     <CardContent className="p-6">
                       <div className="flex justify-between items-start mb-4">
                         <div>

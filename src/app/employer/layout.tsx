@@ -27,7 +27,7 @@ import { SidebarOrganizationButton } from "@/features/organizations/components/S
 import { getCurrentOrganization } from "@/services/clerk/lib/getCurrentUser";
 import { hasOrgUserPermission } from "@/services/clerk/lib/orgUserPermissions";
 import { count, desc, eq } from "drizzle-orm";
-import { ClipboardListIcon, PlusIcon } from "lucide-react";
+import { ClipboardListIcon, PlusIcon, NotebookIcon } from "lucide-react";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -64,6 +64,12 @@ async function EmployerLayout({ children }: { children: ReactNode }) {
           <SidebarGroupContent className="group-data-[state=collapsed]:hidden">
             <JobListingMenu orgId={orgId} />
           </SidebarGroupContent>
+          <SidebarNavMenuGroup
+            title="Tools"
+            items={[
+              { href: "/employer/application-notes", icon: <NotebookIcon />, label: "Application Notes" },
+            ]}
+          />
           <SidebarNavMenuGroup
             className="mt-auto"
             items={[

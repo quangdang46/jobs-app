@@ -161,80 +161,74 @@ export default function RecentlyViewedJobs() {
 
         {/* Jobs List */}
         {filteredJobs.length > 0 ? (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {filteredJobs.map(job => (
               <Card key={job.id} className="hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <Avatar className="w-16 h-16 border-2 border-background shadow-sm">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <Avatar className="w-12 h-12 border-2 border-background shadow-sm">
                       <AvatarImage src={job.companyLogo} alt={job.company} />
-                      <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+                      <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-sm">
                         {getCompanyInitials(job.company)}
                       </AvatarFallback>
                     </Avatar>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <h3 className="text-xl font-semibold mb-1 hover:text-primary cursor-pointer">
-                            {job.title}
-                          </h3>
-                          <p className="text-muted-foreground">{job.company}</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => toggleSaveJob(job.id)}
-                          >
-                            <BookmarkIcon 
-                              className={`w-4 h-4 ${job.saved ? 'fill-current text-primary' : ''}`}
-                            />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => removeFromHistory(job.id)}
-                          >
-                            <XIcon className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-4 mb-3 text-sm text-muted-foreground">
-                        <span>{job.location}</span>
-                        <span>•</span>
-                        <span className="font-medium text-green-600">{job.salary}</span>
-                      </div>
-
-                      <div className="flex items-center gap-2 mb-4">
-                        <Badge variant="secondary">{job.type}</Badge>
-                        {job.remote && <Badge variant="outline">Remote</Badge>}
-                        {job.saved && <Badge variant="outline" className="text-primary border-primary">Saved</Badge>}
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <ClockIcon className="w-4 h-4" />
-                            <span>Viewed {formatDistanceToNow(job.viewedAt, { addSuffix: true })}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <EyeIcon className="w-4 h-4" />
-                            <span>{job.viewCount} {job.viewCount === 1 ? 'view' : 'views'}</span>
-                          </div>
-                        </div>
-
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="sm">
-                            View Details
-                          </Button>
-                          <Button size="sm">
-                            Apply Now
-                          </Button>
-                        </div>
-                      </div>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => toggleSaveJob(job.id)}
+                      >
+                        <BookmarkIcon 
+                          className={`w-4 h-4 ${job.saved ? 'fill-current text-primary' : ''}`}
+                        />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => removeFromHistory(job.id)}
+                      >
+                        <XIcon className="w-4 h-4" />
+                      </Button>
                     </div>
+                  </div>
+
+                  <div className="space-y-2 mb-3">
+                    <h3 className="text-lg font-semibold hover:text-primary cursor-pointer line-clamp-2">
+                      {job.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm">{job.company}</p>
+                    <div className="text-sm text-muted-foreground">
+                      {job.location}
+                    </div>
+                    <div className="font-medium text-green-600 text-sm">{job.salary}</div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    <Badge variant="secondary" className="text-xs">{job.type}</Badge>
+                    {job.remote && <Badge variant="outline" className="text-xs">Remote</Badge>}
+                    {job.saved && <Badge variant="outline" className="text-primary border-primary text-xs">Saved</Badge>}
+                  </div>
+
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <ClockIcon className="w-3 h-3" />
+                      <span>Viewed {formatDistanceToNow(job.viewedAt, { addSuffix: true })}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <EyeIcon className="w-3 h-3" />
+                      <span>{job.viewCount} {job.viewCount === 1 ? 'view' : 'views'}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" className="flex-1 text-xs">
+                      View Details
+                    </Button>
+                    <Button size="sm" className="flex-1 text-xs">
+                      Apply Now
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

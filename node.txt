@@ -228,3 +228,12 @@ export default function MarkdownPartial({
 }
 
 ```
+
+/job-templates - Job Templates
+/job-expiry - Job Expiry Management
+/company-profile - Company Profile
+/salary-search - Salary Range Filter
+/location-search - Location-based Search
+/categories - Job Categories
+/recently-viewed - Recently Viewed Jobs
+/employer/application-notes - Application Notes các trang này phần hiển thị các danh sách phần tử hơi xấu một số trang các phần tử chiếm hết 1 hàng ở giao diện desktop,làm cho các phần tử nhỏ hơn đi
